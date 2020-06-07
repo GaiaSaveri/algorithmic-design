@@ -3,6 +3,7 @@ project (sorting)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O4")

@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-//#include "total_order.h"
+
 #include "insertion_sort.h"
 #include "swap.h"
 #include "quick_sort.h"

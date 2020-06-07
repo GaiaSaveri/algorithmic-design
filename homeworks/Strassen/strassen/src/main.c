@@ -4,19 +4,11 @@
 #include "../include/test.h"
 #include "../include/matrix.h"
 #include "../include/strassen.h"
-#include "../include/strassen_opt.h"
 #include "../include/padding.h"
-
-double elapsed_time(const struct timespec start,
-            const struct timespec stop)
-{
-  return (stop.tv_sec-start.tv_sec) +
-                   (stop.tv_nsec-start.tv_nsec)/1E9;
-}
 
 int main(int argc, char *argv[]) {
 
-  size_t nn = 1 << 12;
+  size_t nn = 1 << 11;
 
   struct timespec start, stop;
 
@@ -33,31 +25,13 @@ int main(int argc, char *argv[]) {
   for (size_t j = 1; j <= nn; j *= 2) {
 
     printf("%ld", j);
-    /**
-    clock_gettime(CLOCK_REALTIME, &start);
-    strassen_matrix_multiplication(C1, (float const *const *const)A, (float const *const *const)B, j);
-    clock_gettime(CLOCK_REALTIME, &stop);
 
-    printf("\t%lf", elapsed_time(start, stop));
-
-    clock_gettime(CLOCK_REALTIME, &start);
-    strassen_opt(C2, (float const *const *const)A, (float const *const *const)B, j);
-    clock_gettime(CLOCK_REALTIME, &stop);
-
-    printf("\t%lf", elapsed_time(start, stop));
-
-    clock_gettime(CLOCK_REALTIME, &start);
-    naive_matrix_multiplication(C0, (float const *const *const)A, (float const *const *const)B, j);
-    clock_gettime(CLOCK_REALTIME, &stop);
-
-    printf("\t%lf", elapsed_time(start, stop));
-    */
     printf("\t%lf", test(strassen_matrix_multiplication, C1, A, B, j));
 
-    printf("\t%lf", test(strassen_opt, C2, A, B, j));
+    printf("\t%lf", test(strassen, C2, A, B, j));
     printf("\t%lf", test(naive_matrix_multiplication, C0, A, B, j));
 
-    printf("\t%d\n", same_matrix((float const *const *const)C0,
+    printf("\t%d\n", same_matrix((float const *const *const)C1,
                                  (float const *const *const)C2, j, j));
   }
 
@@ -67,7 +41,6 @@ deallocate_matrix(B, nn);
 deallocate_matrix(C0, nn);
 deallocate_matrix(C1, nn);
 deallocate_matrix(C2, nn);
-
 
 
 int n;
@@ -86,16 +59,19 @@ scanf("%u", &m);
 float** A1 = allocate_random_matrix(n,l);
 float** B1 = allocate_random_matrix(l,m);
 float** C = allocate_matrix(n,m);
+float**CC = allocate_matrix(n,m);
 
 printf("\t\tTESTING PADDING\n");
 printf("\t\t  Same result\n");
 
-naive_rectangular(C, (float const *const *const)A1, (float const *const *const)B1, n, l, m);
+strassen_padding(CC,(float const *const *const)A1, n, l, (float const *const *const)B1, l, m);
 
-float**CC = strassen_padding((float const *const *const)A1, n, l, (float const *const *const)B1, l, m);
+naive_rectangular(C, (float const *const *const)A1, (float const *const *const)B1, n, l, m);
 
 printf("\t\t       %d\n", same_matrix((float const *const *const)CC,
                              (float const *const *const)C, n, m));
+
+
 
 deallocate_matrix(CC, n);
 deallocate_matrix(A1, n);

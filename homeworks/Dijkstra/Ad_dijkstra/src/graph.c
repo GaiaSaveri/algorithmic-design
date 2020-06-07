@@ -4,8 +4,8 @@
 #include "../include/graph.h"
 //#include "../include/queue.h"
 
-#define INFTY 999999999
-//weight assoiated with the edge connecting node s (source) and node d (destination)
+#define INFTY 999999
+//weight associated with the edge connecting node s (source) and node d (destination)
 int weight(Graph* g, Node* s, Node* d)
 {
   return g->E[s->idx*g->n + d->idx];

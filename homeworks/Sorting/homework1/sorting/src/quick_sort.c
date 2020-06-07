@@ -31,7 +31,7 @@ void quick_sort_aux(void *A, void *A_l, void* A_r, const size_t elem_size, total
   int r = (A_r - A)/(elem_size); //right index
   while(l<r)
   {
-    int p = partition(A, elem_size, l, r, (r+l)/2, leq);
+    int p = partition(A, elem_size, l, r, l, leq);
     quick_sort_aux(A, A+l*elem_size, A+(p-1)*elem_size, elem_size, leq);
     l = p+1;
   }

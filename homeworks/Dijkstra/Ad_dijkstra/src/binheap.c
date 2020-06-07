@@ -57,7 +57,7 @@ void heapify(binheap_type *H,unsigned int node)
 }
 
 
-const void *extract_min(binheap_type *H)
+void *extract_min(binheap_type *H)
 {
     if(is_heap_empty(H)) return NULL;
 
@@ -70,7 +70,7 @@ const void *extract_min(binheap_type *H)
 }
 
 
-const void *find_the_max(void *A,const unsigned int num_of_elem,const size_t key_size,total_order leq)
+const void *find_the_max(void *A,const unsigned int num_of_elem,const size_t key_size,total_order_type leq)
 {
     if(num_of_elem==0) return NULL;
 
@@ -85,7 +85,7 @@ const void *find_the_max(void *A,const unsigned int num_of_elem,const size_t key
 }
 
 
-binheap_type *build_heap(void *A,const unsigned int num_of_elem,const unsigned int max_size,const size_t key_size,total_order leq)
+binheap_type *build_heap(void *A,const unsigned int num_of_elem,const unsigned int max_size,const size_t key_size,total_order_type leq)
 {
     binheap_type *H=(binheap_type*)malloc(sizeof(binheap_type));
 
@@ -116,7 +116,7 @@ void delete_heap(binheap_type *H)
 }
 
 
-const void *decrease_key(binheap_type *H, void *node, const void *value)
+void *decrease_key(binheap_type *H, void *node, const void *value)
 {
     unsigned int node_idx=INDEX_OF(H,node);
 

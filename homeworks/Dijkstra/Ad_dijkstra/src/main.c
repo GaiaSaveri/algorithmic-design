@@ -4,7 +4,7 @@
 
 #include"../include/dijkstra.h"
 
-#define INFTY 999999999
+#define INFTY 999999
 
 double elapsed_time(const struct timespec start,
             const struct timespec stop)
@@ -37,6 +37,11 @@ int main() {
   g.E = adj_mat;
   g.V = (Node*)malloc(sizeof(Node)*size);
 
+  Graph gg;
+  gg.n = size;
+  gg.E = adj_mat;
+  gg.V = (Node*)malloc(sizeof(Node)*size);
+
   printf("\nINPUT GRAPH'S PROPERTIES\n");
 
   graph_properties(&g);
@@ -48,31 +53,47 @@ int main() {
 
   printf("\nHEAP-BASED DIJKSTRA'S ALGORITHM\n");
 
-  Dijkstra_minheap(&g, 0);
-  graph_properties(&g);
+  Dijkstra_minheap(&gg, 0);
+  graph_properties(&gg);
+
+  free(g.V);
+  free(gg.V);
+  free(adj_mat);
+
 
 //---------> PERFORMANCE TEST <--------- //
 
   struct timespec start, stop;
+
   int size1 = 30000;
   int* adj_mat1 = (int*)malloc(sizeof(int)*size1*size1);
-  Graph g1;
+
   for(size_t i=0; i<size1; i++)
   {
     for(size_t j=0; j<size1; j++)
     {
-      adj_mat1[i*size1 + j] = (j+i)*2+1 + 50*((i+j)%3==0)/(1+7*((i+j)%(9)==0));
+      if((i+j)<2500)
+        adj_mat1[i*size1+j] = i+j;
+      if((i+j)>300)
+        adj_mat1[j*size1+i] = i+j+5;
     }
   }
+
+  Graph g1;
   g1.E = adj_mat1;
   g1.V = (Node*)malloc(sizeof(Node)*size1);
 
-  printf("\n\n\tTESTING DENSE GRAPHS\n");
+  Graph g2;
+  g2.E = adj_mat1;
+  g2.V = (Node*)malloc(sizeof(Node)*size1);
+
+  printf("\n\n\tTESTING DIJKSTRA\n");
 
   printf("size\tArray\t\tHeap\n");
   for(size_t i=0; i<10; i++)
   {
     g1.n = size1/(1<<(9-i));
+    g2.n = size1/(1<<(9-i));
 
     printf("\n%d", g1.n);
 
@@ -83,43 +104,14 @@ int main() {
     printf("\t%lf", elapsed_time(start, stop));
 
     clock_gettime(CLOCK_REALTIME, &start);
-    Dijkstra_minheap(&g1, 0);
+    Dijkstra_minheap(&g2, 0);
     clock_gettime(CLOCK_REALTIME, &stop);
 
     printf("\t%lf", elapsed_time(start, stop));
 
   }
-
-  printf("\n\n\tTESTING SPARSE GRAPHS\n");
-
-  printf("size\tArray\t\tHeap\n");
-
-  for(size_t i=0; i<10; i++)
-  {
-    g1.n = size1/(1<<(9-i));
-
-    for(int i=0; i<g1.n*g1.n; i++)
-    adj_mat1[i] = INFTY;
-
-    for(int i=0; i<g1.n-1; i++)
-    { adj_mat1[i*g1.n + i + 1] = 42; }
-    adj_mat1[(g1.n-1)*g1.n] = 26;
-
-    printf("\n%d", g1.n);
-
-    clock_gettime(CLOCK_REALTIME, &start);
-    Dijkstra_Aq(&g1, 0);
-    clock_gettime(CLOCK_REALTIME, &stop);
-
-    printf("\t%lf", elapsed_time(start, stop));
-
-    clock_gettime(CLOCK_REALTIME, &start);
-    Dijkstra_minheap(&g1, 0);
-    clock_gettime(CLOCK_REALTIME, &stop);
-
-    printf("\t%lf", elapsed_time(start, stop));
-
-  }
-
+  free(adj_mat1);
+  free(g1.V);
+  free(g2.V);
   return 0;
 }

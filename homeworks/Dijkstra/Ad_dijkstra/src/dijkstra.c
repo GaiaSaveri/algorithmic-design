@@ -4,7 +4,7 @@
 
 #include "../include/dijkstra.h"
 
-#define INFTY 999999999
+#define INFTY 999999
 
 void init_sssp(Graph* G)
 {
@@ -14,6 +14,7 @@ void init_sssp(Graph* G)
     (G->V[v]).d = INFTY;
     (G->V[v]).pred = NULL;
   }
+
 }
 
 void relax(Node* s, Node* d, int weight)
@@ -66,17 +67,14 @@ void Dijkstra_minheap(Graph* g, int source_idx)
 {
   init_sssp(g);
   Node* s = node(g, source_idx);
+
   s->d = 0;
-
   binheap_type* H = build_heap(g->V, g->n, g->n, sizeof(Node), compare_dist);
-
   while(!(is_heap_empty(H)))
   {
     Node* u = (Node*)extract_min(H);
     int nhn = neighbours_number(g, u);
-    //printf("\nciao\n");
     Node** nh = neighbours(g, u, nhn);
-    //printf("\nenter\n");
     for(size_t i=0; i<nhn; i++)
     {
       relax(u, nh[i], weight(g, u, nh[i]));

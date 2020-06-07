@@ -1,8 +1,4 @@
 #include "heap_sort.h"
-//#include "binheap.h"
-//#include "swap.h"
-
-//#include <string.h> //memcpy
 
 
 void heap_sort(void *A, const unsigned int n,

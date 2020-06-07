@@ -1,4 +1,5 @@
 #ifndef __TOTAL_ORDER__
+#define __TOTAL_ORDER__
 
 typedef int (*total_order)(const void *a, const void *b);
 
